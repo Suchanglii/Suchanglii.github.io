@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本阶段开始进行编程能力的提升P.374 类变量p.375 类变量快速入门1234567class Child&#123;    private Sting name;    private static count&#x3D;0;	&#x2F;&#x2F;这个东西就是类变量    public Child(String name)&#123;        this.name&#x3D;name;    &#125;&#125;  &amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内部类与代码块解析">
+<meta property="og:url" content="http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/index.html">
+<meta property="og:site_name" content="Suchanglii&#39;s blog">
+<meta property="og:description" content="本阶段开始进行编程能力的提升P.374 类变量p.375 类变量快速入门1234567class Child&#123;    private Sting name;    private static count&#x3D;0;	&#x2F;&#x2F;这个东西就是类变量    public Child(String name)&#123;        this.name&#x3D;name;    &#125;&#125;  &amp;#">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230315194550149.png">
+<meta property="og:image" content="http://suchanglii.github.io/assets/image-20230317084144711.png">
+<meta property="article:published_time" content="2023-03-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-10T13:37:52.320Z">
+<meta property="article:author" content="Suchanglii">
+<meta property="article:tag" content="java基础">
+<meta property="article:tag" content="内部类">
+<meta property="article:tag" content="java代码块">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://suchanglii.github.io/images/image-20230315194550149.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>内部类与代码块解析</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%8F%8D%E5%B0%84/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&text=内部类与代码块解析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&is_video=false&description=内部类与代码块解析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=内部类与代码块解析&body=Check out this article: http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&name=内部类与代码块解析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&t=内部类与代码块解析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E9%98%B6%E6%AE%B5%E5%BC%80%E5%A7%8B%E8%BF%9B%E8%A1%8C%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8F%90%E5%8D%87"><span class="toc-number">1.</span> <span class="toc-text">本阶段开始进行编程能力的提升</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F"><span class="toc-number">1.0.1.</span> <span class="toc-text">类变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.0.2.</span> <span class="toc-text">类变量快速入门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%88%A8%E6%9E%90"><span class="toc-number">1.0.3.</span> <span class="toc-text">类变量的内存刨析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#main%E6%96%B9%E6%B3%95%E5%88%A8%E6%9E%90"><span class="toc-number">1.0.4.</span> <span class="toc-text">main方法刨析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%9D%97%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.0.5.</span> <span class="toc-text">代码块快速入门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">1.0.6.</span> <span class="toc-text">静态代码块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A2%AB%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.0.7.</span> <span class="toc-text">类什么时候被加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E6%97%B6-%E5%9C%A8%E4%B8%80%E4%B8%AA%E7%B1%BB%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.0.8.</span> <span class="toc-text">创建对象时,在一个类调用顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#final%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.0.9.</span> <span class="toc-text">final关键字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.0.10.</span> <span class="toc-text">接口的使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%86%E8%8A%82"><span class="toc-number">1.0.11.</span> <span class="toc-text">接口的使用细节</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.0.12.</span> <span class="toc-text">内部类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.0.13.</span> <span class="toc-text">成员内部类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.0.14.</span> <span class="toc-text">静态内部类</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        内部类与代码块解析
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Suchanglii</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-27T16:00:00.000Z" class="dt-published" itemprop="datePublished">2023-03-28</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java%E4%BB%A3%E7%A0%81%E5%9D%97/" rel="tag">java代码块</a>, <a class="p-category" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础</a>, <a class="p-category" href="/tags/%E5%86%85%E9%83%A8%E7%B1%BB/" rel="tag">内部类</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="本阶段开始进行编程能力的提升"><a href="#本阶段开始进行编程能力的提升" class="headerlink" title="本阶段开始进行编程能力的提升"></a>本阶段开始进行编程能力的提升</h2><p>P.374</p>
+<h4 id="类变量"><a href="#类变量" class="headerlink" title="类变量"></a>类变量</h4><p>p.375</p>
+<h4 id="类变量快速入门"><a href="#类变量快速入门" class="headerlink" title="类变量快速入门"></a>类变量快速入门</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Child</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Sting name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> count=<span class="number">0</span>;	<span class="comment">//这个东西就是类变量</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Child</span><span class="params">(String name)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.name=name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;这个变量会被所有类的实例对象共享&#x3D;&#x3D;</p>
+<p>P.376</p>
+<h4 id="类变量的内存刨析"><a href="#类变量的内存刨析" class="headerlink" title="类变量的内存刨析"></a>类变量的内存刨析</h4><hr>
+<p>P.383</p>
+<h4 id="main方法刨析"><a href="#main方法刨析" class="headerlink" title="main方法刨析"></a>main方法刨析</h4><blockquote>
+<p> main方法是由java虚拟机调用的</p>
+<ul>
+<li><p>方法只能是public的,因为java虚拟机和main不在同一个包中</p>
+</li>
+<li><p>static :因为java虚拟机在调用main方法的时候不需要创建类实例</p>
+</li>
+<li><p>String[] args: 这个参数是在执行参数的时候传进去的</p>
+<p>&#x3D;&#x3D;如何传入args形参&#x3D;&#x3D;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Hello</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;args.length;i++)&#123;</span><br><span class="line">            sout(args);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</blockquote>
+<blockquote alt="warn">
+<p>
+    1. 静态方法main能过直接访问本类的静态成员</br>
+    2. 静态方法main不可以访问本类的非静态成员</br>
+    3. 静态方法main 要访问本类的非静态成员,需要先创建对象,再调用即可
+</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//还可以有这种调用</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main01</span>&#123;</span><br><span class="line">    <span class="comment">//在这里定义一个变量</span></span><br><span class="line">    <span class="type">int</span> n1;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(Stirng args)</span>&#123;</span><br><span class="line">        <span class="comment">//先创建Mian01对象</span></span><br><span class="line">        <span class="type">Mian01</span> <span class="variable">m</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Mian01</span>();</span><br><span class="line">        sout(m.n1);</span><br><span class="line">        <span class="comment">//这种调用是允许的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>P.386</p>
+<h4 id="代码块快速入门"><a href="#代码块快速入门" class="headerlink" title="代码块快速入门"></a>代码块快速入门</h4><p><img src="/./../images/image-20230315194550149.png" alt="image-20230315194550149"></p>
+<blockquote alt="warn">
+<p>
+    1. 当我们在构造器中需要有重复的工作的时候,可以将代码提取到静态代码块中</br>
+    2. 代码块的调用顺序优先于构造器
+</p>
+</blockquote>
+
+<p>P.387</p>
+<h4 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>作用: 对类进行初始化 </p>
+</blockquote>
+<blockquote alt="warn">
+<p>
+<font title="red">静态代码块</font>随着<span alt="wavy">1. 类的加载而执行,2.并只会执行一次.3.调用静态属性的时候 ,也会被调用</span></br>
+<font alt="red">普通代码块</font>
+<span alt="wavy">1.每创建一个对象,就执行.2.而且只是使用静态属性,普通代码块不会被执行</span>
+</p>
+</blockquote>
+
+
+<h4 id="类什么时候被加载"><a href="#类什么时候被加载" class="headerlink" title="类什么时候被加载"></a>类什么时候被加载</h4><ol>
+<li>创建对象实例时</li>
+<li>创建子类对象实例,父类也会被加载,而且,父类先被加载,子类后被加载</li>
+<li>使用类的静态成员时</li>
+</ol>
+<blockquote alt="success">
+<p>
+1. static代码块是类加载时,执行.调用一次  </br>
+2. 普通代码块石创建对象时调用,创建一次,调用一次  </br>
+3. <span alt="emp">类加载的三种情况</span>  
+</p>
+</blockquote>
+
+<hr>
+<p>P.388</p>
+<h4 id="创建对象时-在一个类调用顺序"><a href="#创建对象时-在一个类调用顺序" class="headerlink" title="创建对象时,在一个类调用顺序"></a>创建对象时,在一个类调用顺序</h4><p><span alt="shake">重点,难点</span></p>
+<ol>
+<li>同时存在静态代码块和静态属性:两者的<span alt="emp">优先级是相同的</span> ,谁在前,谁先执行</li>
+<li>普通代码块一样的</li>
+<li>最后调用构造器</li>
+</ol>
+<p>P.389</p>
+<p>构造器的最前面其实隐含了super()与调用普通代码块<br><span alt="shake">重点</span></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">A</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//隐藏的执行要求</span></span><br><span class="line">        <span class="comment">//(1)super() </span></span><br><span class="line">        <span class="comment">//(2)调用本类的普通代码块</span></span><br><span class="line">        sout(<span class="string">&quot;然后调用构造器&quot;</span>)</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>P.390</p>
+<p><span alt="shake">重点,难点,面试题</span></p>
+<blockquote alt="question">
+    <p>
+    创建一个子类对象时,他们的静态代码块,静态属性初始化,普通代码块,普通属性初始化,构造方法的调用顺序如下:
+    </p>
+</blockquote>
+
+<ol>
+<li>父类的静态代码块和静态属性(优先级一样,按照定义顺序执行)</li>
+<li>子类的静态代码块和静态属性(同上)</li>
+<li>父类的普通代码块和普通属性初始化(同上)</li>
+<li>父类的构造方法</li>
+<li>子类的普通代码块和普通属性初始化(同上)</li>
+<li>子类的构造方法</li>
+</ol>
+<p><span alt="wavy">静态代码块只能直接调用静态成员,普通代码块可以调用任意成员</span></p>
+<hr>
+<p>P.395</p>
+<h4 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a>final关键字</h4><ol>
+<li>final与static往往搭配使用,效率更高,不会导致类加载</li>
+<li>final修饰的而属性是静态的,则初始化位置只能是<ol>
+<li>定义时</li>
+<li>在静态代码块中(不能再构造器中赋值)</li>
+</ol>
+</li>
+<li>final修饰的属性再定义时,必须赋初值,并且以后不能更改<ol>
+<li>定义时</li>
+<li>构造器中</li>
+<li>代码块中</li>
+</ol>
+</li>
+</ol>
+<hr>
+<p>P.404</p>
+<h4 id="接口的使用场景"><a href="#接口的使用场景" class="headerlink" title="接口的使用场景"></a>接口的使用场景</h4><ol>
+<li><p>要知道某工件,专家只需要把工件的功能,规格定下来即可,由别人具体实现即可</p>
+</li>
+<li><p>有一个项目经理,管理三个程序员,功能开发一个软件,为了控制和管理软件,项目经理可以定义一些接口,然后由程序员具体实现</p>
+<p> 实际需求:三个程序员没编写三个类,分别完成对mysql,oracle,db2数据库的连接 connect,close</p>
+</li>
+</ol>
+<p>P.406</p>
+<h4 id="接口的使用细节"><a href="#接口的使用细节" class="headerlink" title="接口的使用细节"></a>接口的使用细节</h4><ol start="6">
+<li>接口中的属性,只能是final的,而且是public static final修饰符,比如写了一个int a&#x3D;1,实际上是public static final int a&#x3D;1;</li>
+<li>接口不能继承其他类,但是可以继承多个别的接口]</li>
+</ol>
+<p>P.412</p>
+<h4 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h4><p>分类:</p>
+<ol>
+<li>定义在外部类局部位置上(比如方法内):<ol>
+<li>局部内部类(有类名)</li>
+<li><span alt="emp">匿名内部类(没有类名)</span>,<span alt="shake">重点</span></li>
+</ol>
+</li>
+<li>定义在外部类的成员位置上:<ol>
+<li>成员内部类(没有static修饰)</li>
+<li>静态内部类(使用static修饰)</li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>局部内部类</p>
+</blockquote>
+<ol>
+<li><p>定义在外部类的&#x3D;&#x3D;局部位置&#x3D;&#x3D;</p>
+</li>
+<li><p>可以直接访问外部类的所有成员,包含私有的</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Outer02</span>&#123;<span class="comment">//外部类</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> n1=<span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">m2</span><span class="params">()</span>&#123;&#125;;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">m1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">class</span> <span class="title class_">Inner02</span>&#123;<span class="comment">//用final修饰的话,不能被继承</span></span><br><span class="line">            <span class="keyword">private</span> <span class="type">int</span> n1=<span class="number">200</span>;<span class="comment">//注意外部类有重名的变量,要注意访问方法</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">f1</span><span class="params">()</span>&#123;</span><br><span class="line">                sout(<span class="string">&quot;n1&quot;</span>+n1);<span class="comment">//这里都可以访问到私有的属性</span></span><br><span class="line">                m2();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="comment">//创建Inner02对象</span></span><br><span class="line">        <span class="type">Inner02</span> <span class="variable">in01</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Inner</span>();</span><br><span class="line">        in01.f1();<span class="comment">//这样子才能执行Innerr02的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不能添加访问修饰符(&#x3D;&#x3D;内部类的地位相当于是个局部变量&#x3D;&#x3D;),但是可以用final修饰(局部变量能用final修饰)</p>
+</li>
+<li><p>&#x3D;&#x3D;作用域&#x3D;&#x3D;:仅仅在定义它的方法或者代码块中</p>
+</li>
+<li><p>局部内部类可以直接访问外部类的成员,比如</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sout(<span class="string">&quot;n1&quot;</span>+n1);<span class="comment">//这里都可以访问到私有的属性</span></span><br><span class="line">m2();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>外部类在方法中,可以创建Outer02对象,然后调用方法即可</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main01</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        <span class="type">Outer02</span> <span class="variable">ot02</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Outer02</span>();</span><br><span class="line">        ot02.m1();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>外部其他类不能访问局部内部类</p>
+</li>
+<li><p>如果外部类与局部内部类的成员重名的时候,遵循就近原则,如果想访问外部类的成员,可以使用(&#x3D;&#x3D;外部类名.this.成员&#x3D;&#x3D;)去访问</p>
+<p> 外部类名.this.成员的解释:Outer02.this 本质就是外部类的对象,即哪个对象调用了m1,Outer02.this就是哪个对象</p>
+</li>
+</ol>
+<blockquote>
+<p>匿名内部类	<span alt="shake">重点</span></p>
+</blockquote>
+<ol>
+<li>本质是类</li>
+<li>内部类</li>
+<li>匿名的(没有名字,实际上是系统分配的类名,自己不能看到)</li>
+<li>同时还是一个对象</li>
+</ol>
+<p>new 类或接口(参数列表){</p>
+<p>​		类体;</p>
+<p>}</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AnonymousInnerClass</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        Outer04 outer04=<span class="keyword">new</span> <span class="title class_">Outer04</span>();</span><br><span class="line">        outer04.method();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Outer04</span>&#123;<span class="comment">//外部类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">method</span><span class="params">()</span>&#123;</span><br><span class="line">        IA tiger=<span class="keyword">new</span> <span class="title class_">IA</span>()&#123;<span class="comment">//匿名内部类,简化开发</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">cry</span><span class="params">()</span>&#123;</span><br><span class="line">                sout(<span class="string">&quot;老虎叫&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        tiger.cry();<span class="comment">//动态绑定</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Interface <span class="title function_">IA</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">cry</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote alt="question">
+    <p>
+        需求:想使用IA接口 并创建对象<br/>
+        tiger类只是使用一次,后面再不使用<br/>
+    </p>
+</blockquote>
+==可以使用匿名内部类,简化开发==
+
+<blockquote alt="question">
+    <p>
+           tiger的编译类型是什么?------IA<br/>
+           tiger的运行类型是什么?------就是匿名内部类--->XXXX的名字:<font>外部类名称$1</font>
+    </p>
+</blockquote>
+
+<p>看底层:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">XXXX</span> implement IA&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">cry</span><span class="params">()</span>&#123;</span><br><span class="line">        sout(<span class="string">&quot;老虎叫&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;在底层会分配类名&#x3D;&#x3D;</p>
+<p>jdk底层在创建匿名匿名内部类,XXXX,立即马上创建了Outer04$1,并且立马返回给tiger</p>
+<p>用一次就再不能使用</p>
+<blockquote alt="warn">
+    <p>
+           匿名内部类的使用细节
+    </p>
+</blockquote>
+
+<ol>
+<li><p>匿名内部类比较奇特,因为匿名内部类既是一个类的定义,同时它本身也是一个对象,因此从语法上看,它既有定义类的特征,也有创建对象的特征.因此可以调用匿名内部类方法</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AnonymousInnerClass</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        Outer05 outer04=<span class="keyword">new</span> <span class="title class_">Outer05</span>();</span><br><span class="line">        outer05.method();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Outer05</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> n1=<span class="number">99</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">f1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//创建一个基于类的匿名内部类</span></span><br><span class="line">        <span class="type">Person</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Person</span>()&#123;</span><br><span class="line">            <span class="meta">@override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hi</span><span class="params">()</span>&#123;</span><br><span class="line">                sout(<span class="string">&quot;匿名内部类说:hi&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        p.hi();<span class="comment">//动态绑定</span></span><br><span class="line">        <span class="comment">//-----------还有这个方法-------------</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Person</span>()&#123;</span><br><span class="line">             <span class="meta">@override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hi</span><span class="params">()</span>&#123;</span><br><span class="line">                sout(<span class="string">&quot;匿名内部类说:hi,而且没有名字&quot;</span>);</span><br><span class="line">                sout(<span class="string">&quot;外部类的私有属性n1&quot;</span>+n1);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="meta">@override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ok</span><span class="params">(String str)</span>&#123;</span><br><span class="line">                <span class="built_in">super</span>.ok(str);</span><br><span class="line">			&#125;</span><br><span class="line">        &#125;.ok(<span class="string">&quot;suchangli&quot;</span>);<span class="comment">//可以有这种方式访问</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hi</span><span class="params">()</span>&#123;</span><br><span class="line">        sout(<span class="string">&quot;hi&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ok</span><span class="params">(String str)</span>&#123;</span><br><span class="line">        sout(<span class="string">&quot;ok&quot;</span>+str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>可以直接访问外部类的所有成员,包括私有的</p>
+</li>
+<li><p>不能添加访问修饰符,因为他的低位就是一个局部变量</p>
+</li>
+<li><p>作用域:仅仅再定义他的方法或代码块中</p>
+</li>
+<li><p>外部其他类不能访问匿名内部类</p>
+</li>
+</ol>
+<blockquote alt="success">
+    <p>
+        匿名内部类最佳实践
+    </p>
+</blockquote>
+1. 
+
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InnerClassEXercise01</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        <span class="comment">//匿名内部类可以当作实参直接传递</span></span><br><span class="line">        f1(<span class="keyword">new</span> <span class="title class_">Il</span>()&#123;</span><br><span class="line">            <span class="meta">@override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span>&#123;</span><br><span class="line">                sout(<span class="string">&quot;奇特的使用方法&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">//使用传统方法的话,得需要先创建一个新的类实现Il,再创建实例,重写接口中的方法,再调用.这种叫做&quot;&quot;&quot;硬编码&quot;&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//静态方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">f1</span><span class="params">(Il il)</span>&#123;</span><br><span class="line">        il.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//接口</span></span><br><span class="line">Interface Il&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre>
+<p>这种用法的优点:</p>
+<p>传统方式如果有需求变动,比如说:sout(“输出的内容变了”);像这种变动会直接影响所有的实例,&#x3D;&#x3D;使用匿名内部类实现的话,只会改变局部的内容,而不需要从实现类上改动.&#x3D;&#x3D;</p>
+<h4 id="成员内部类"><a href="#成员内部类" class="headerlink" title="成员内部类"></a>成员内部类</h4><p>&#x3D;&#x3D;定义位置&#x3D;&#x3D;:定义在外部类成员位置上,并且不能有static修饰</p>
+<ol>
+<li><p>可以访问外部类的所有属性,包括私有的</p>
+<p> <img src="/./assets/image-20230317084144711.png" alt="image-20230317084144711"></p>
+</li>
+<li><p>可以用修饰符控制访问,因为&#x3D;&#x3D;定位是一个成员&#x3D;&#x3D;</p>
+</li>
+<li><p>可以调用外部类所有成员</p>
+</li>
+<li><p>使用方法就是创建内部类对象,然后调用</p>
+</li>
+<li><p>外部其他类—访问—-&gt;成员内部类:</p>
+<ol>
+<li><p>使用外部类对象new一个内部类对象,(相当于把new Inner08()当作是outer08的成员)</p>
+<p> 通过外部类实例new内部类</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Outer08</span> <span class="variable">outer08</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Outer08</span>();</span><br><span class="line">Outer08.<span class="type">Inner08</span> <span class="variable">inner08</span> <span class="operator">=</span> outer08.<span class="keyword">new</span> <span class="title class_">Inner08</span>(); </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用方法new好了传出来</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Inner08 <span class="title function_">getInner08Instance</span><span class="params">()</span>&#123;</span><br><span class="line">	<span class="keyword">return</span>  <span class="keyword">new</span> <span class="title class_">Inner08</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>内部类与外部类成员重名时,遵循就近原则</p>
+</li>
+</ol>
+<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><p>定义在外部类成员位置,并且有static修饰</p>
+<p>特点:</p>
+<ol>
+<li>可以访问外部类的所有静态成员,包含私有的,但不能直接访问非静态成员</li>
+<li>可以添加任意访问修饰符</li>
+<li>作用域为整个类体</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/26954130">https://www.zhihu.com/question/26954130</a></p>
+<blockquote alt="warn">
+    <p>
+        内部类使用的原因<br/>
+        1. 封装性<br/>
+        2. <font>实现多继承</font><br/>
+        3. 用匿名内部类实现回调功能<br/>
+        4. 解决继承及实现接口出现同名方法的问题<br/>
+        5. 可以有效的将有一定关系的类组织在一起，又可以对外界有所隐藏<br/>
+        6. 方便编写事件驱动程序<br/>
+        7. 方便编写多线程代码
+    </p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E9%98%B6%E6%AE%B5%E5%BC%80%E5%A7%8B%E8%BF%9B%E8%A1%8C%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8F%90%E5%8D%87"><span class="toc-number">1.</span> <span class="toc-text">本阶段开始进行编程能力的提升</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F"><span class="toc-number">1.0.1.</span> <span class="toc-text">类变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.0.2.</span> <span class="toc-text">类变量快速入门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%88%A8%E6%9E%90"><span class="toc-number">1.0.3.</span> <span class="toc-text">类变量的内存刨析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#main%E6%96%B9%E6%B3%95%E5%88%A8%E6%9E%90"><span class="toc-number">1.0.4.</span> <span class="toc-text">main方法刨析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%9D%97%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.0.5.</span> <span class="toc-text">代码块快速入门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">1.0.6.</span> <span class="toc-text">静态代码块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A2%AB%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.0.7.</span> <span class="toc-text">类什么时候被加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E6%97%B6-%E5%9C%A8%E4%B8%80%E4%B8%AA%E7%B1%BB%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.0.8.</span> <span class="toc-text">创建对象时,在一个类调用顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#final%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.0.9.</span> <span class="toc-text">final关键字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.0.10.</span> <span class="toc-text">接口的使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%86%E8%8A%82"><span class="toc-number">1.0.11.</span> <span class="toc-text">接口的使用细节</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.0.12.</span> <span class="toc-text">内部类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.0.13.</span> <span class="toc-text">成员内部类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.0.14.</span> <span class="toc-text">静态内部类</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&text=内部类与代码块解析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&is_video=false&description=内部类与代码块解析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=内部类与代码块解析&body=Check out this article: http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&title=内部类与代码块解析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&name=内部类与代码块解析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%9D%97/&t=内部类与代码块解析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023
+    Suchanglii
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

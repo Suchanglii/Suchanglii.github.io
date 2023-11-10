@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Map接口   !!!注意理解,有些方法离不开下面的东西  K-V 左后是HashMap$Node node &#x3D; newNode(hash,key,value,null)  K-V 为了方便程序员的遍历,还会创建 EntrySet 集合,该集合存放的元素类型 Entry, 而一个Entry 对象就有k,v  EntrySet&lt;Entry&lt;K,V&gt;&gt; 即: tran">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashMap 部分源码探究">
+<meta property="og:url" content="http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/index.html">
+<meta property="og:site_name" content="Suchanglii&#39;s blog">
+<meta property="og:description" content="Map接口   !!!注意理解,有些方法离不开下面的东西  K-V 左后是HashMap$Node node &#x3D; newNode(hash,key,value,null)  K-V 为了方便程序员的遍历,还会创建 EntrySet 集合,该集合存放的元素类型 Entry, 而一个Entry 对象就有k,v  EntrySet&lt;Entry&lt;K,V&gt;&gt; 即: tran">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230328174536201.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230326154227263.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230326155142703.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230326162003101.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230326162153620.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230326162212775.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230326174936817.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230327194109728.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230328105913027.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230328111332743.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230328122206846.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/Hashtable%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230328174223666.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230328175714954.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/TreeSet%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6%E5%88%A8%E6%9E%90.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230331083100366.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230330110135229.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230330110656649.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230330111359117.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230330113539389.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230330121339768.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230331083834319.png">
+<meta property="article:published_time" content="2023-03-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-10T13:15:56.475Z">
+<meta property="article:author" content="Suchanglii">
+<meta property="article:tag" content="java基础">
+<meta property="article:tag" content="集合">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://suchanglii.github.io/images/image-20230328174536201.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>HashMap 部分源码探究</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E7%BA%BF%E7%A8%8B/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&text=HashMap 部分源码探究"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&is_video=false&description=HashMap 部分源码探究"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HashMap 部分源码探究&body=Check out this article: http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&name=HashMap 部分源码探究&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&t=HashMap 部分源码探究"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Map%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.</span> <span class="toc-text">Map接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Map%E6%8E%A5%E5%8F%A3%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">Map接口常用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">两种遍历方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap-%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">HashMap 底层源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HashTable-%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%88%A8%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">HashTable 底层源码刨析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Properties"><span class="toc-number">4.</span> <span class="toc-text">Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E9%9B%86%E5%90%88"><span class="toc-number">5.</span> <span class="toc-text">如何选择集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TreeSet-%E4%B8%8EHashSet%E7%9A%84%E6%9C%80%E5%A4%A7%E5%8C%BA%E5%88%AB%E2%80%93%E5%8F%AF%E4%BB%A5%E6%8E%92%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">TreeSet (与HashSet的最大区别–可以排序)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TreeMap"><span class="toc-number">7.</span> <span class="toc-text">TreeMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Collections-%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">8.</span> <span class="toc-text">Collections 工具类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E4%BD%9C%E4%B8%9A"><span class="toc-number">9.</span> <span class="toc-text">本章作业</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        HashMap 部分源码探究
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Suchanglii</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-27T16:00:00.000Z" class="dt-published" itemprop="datePublished">2023-03-28</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础</a>, <a class="p-category" href="/tags/%E9%9B%86%E5%90%88/" rel="tag">集合</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Map接口"><a href="#Map接口" class="headerlink" title="Map接口"></a>Map接口</h2><p><img src="/./../images/image-20230328174536201.png" alt="image-20230328174536201"></p>
+<p><img src="/./../images/image-20230326154227263.png" alt="image-20230326154227263"></p>
+<p><img src="/./../images/image-20230326155142703.png" alt="image-20230326155142703"></p>
+<p><span alt="modern">!!!注意理解,有些方法离不开下面的东西</span></p>
+<ol>
+<li><p>K-V 左后是HashMap$Node node &#x3D; newNode(hash,key,value,null)</p>
+</li>
+<li><p>K-V 为了方便程序员的遍历,还会创建 EntrySet 集合,该集合存放的元素类型 Entry, 而一个Entry 对象就有k,v  EntrySet&lt;Entry&lt;K,V&gt;&gt; 即: transient Set&lt;Map.Entry&lt;K,V&gt; entrySet;</p>
+<ul>
+<li><p>Entry&lt;K,V&gt;这个东西是Map接口中的一个接口</p>
+<p>  <img src="/./../images/image-20230326162003101.png" alt="image-20230326162003101"></p>
+</li>
+<li><p>EntrySet 与 Node 一样,都是 HashMap 的内部类,&#x3D;&#x3D;Entry接口(这是 Map 接口中的接口)定义了数据存储格式&#x3D;&#x3D;)</p>
+<p>  <img src="/./../images/image-20230326162153620.png" alt="image-20230326162153620"></p>
+<p>  <img src="/./../images/image-20230326162212775.png" alt="image-20230326162212775"></p>
+<p>  Node直接实现了Entry 接口,而EntrySet 这个集合中存放的元素是实现了Entry 接口的,有一定的联系的!!!</p>
+</li>
+</ul>
+</li>
+<li><p>在EntrySet 中,定义的类型是 Map.Entry ,但是<span alt="underline">实际上存放的还是HashMap$Node</span>,这是因为HashMap$Node implements Map.Entry&lt;K,V&gt;</p>
+</li>
+<li><p>当把HashMap$Node 对象,存放到 entrySet 就方便我们遍历,因为Map.Entry 提供了重要的方法 –&gt; getKey(),getValue()</p>
+</li>
+<li><p>其实是把Node转成Entry,然后存放到EntrySet中</p>
+</li>
+<li><p>Node没有提供相应的获取key,value的方法</p>
+</li>
+</ol>
+<h3 id="Map接口常用方法"><a href="#Map接口常用方法" class="headerlink" title="Map接口常用方法"></a>Map接口常用方法</h3><p><img src="/./../images/image-20230326174936817.png" alt="image-20230326174936817"></p>
+<h3 id="两种遍历方式"><a href="#两种遍历方式" class="headerlink" title="两种遍历方式"></a>两种遍历方式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HashMap</span> <span class="variable">hashMap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">hashMap.put(<span class="number">1</span>,<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;老王&quot;</span>, <span class="number">30000</span>, <span class="number">1</span>));</span><br><span class="line">hashMap.put(<span class="number">2</span>,<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;老张&quot;</span>, <span class="number">8888</span>, <span class="number">2</span>));</span><br><span class="line">hashMap.put(<span class="number">3</span>,<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;老李&quot;</span>, <span class="number">6666</span>, <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用keySet进行遍历</span></span><br><span class="line"><span class="type">Set</span> <span class="variable">set</span> <span class="operator">=</span> hashMap.keySet();</span><br><span class="line"><span class="keyword">for</span> (Object o :set) &#123;</span><br><span class="line">    <span class="type">Employee</span> <span class="variable">employee</span> <span class="operator">=</span> (Employee) hashMap.get(o);</span><br><span class="line">    <span class="keyword">if</span> (employee.getSal() &gt; <span class="number">18000</span>) &#123;</span><br><span class="line">        System.out.println(employee);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//使用迭代器</span></span><br><span class="line"><span class="type">Set</span> <span class="variable">entrySet</span> <span class="operator">=</span> hashMap.entrySet();</span><br><span class="line"><span class="type">Iterator</span> <span class="variable">iterator</span> <span class="operator">=</span> entrySet.iterator();</span><br><span class="line"><span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">    Map.<span class="type">Entry</span> <span class="variable">next</span> <span class="operator">=</span>(Map.Entry) iterator.next();</span><br><span class="line">    <span class="type">Employee</span> <span class="variable">value</span> <span class="operator">=</span> (Employee)next.getValue();</span><br><span class="line">    <span class="keyword">if</span> (((Employee) next.getValue()).getSal() &gt; <span class="number">3000</span>) &#123;</span><br><span class="line">        System.out.println(next);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><font>小结</font></p>
+<p><img src="/./../images/image-20230327194109728.png" alt="image-20230327194109728"></p>
+<h2 id="HashMap-底层源码分析"><a href="#HashMap-底层源码分析" class="headerlink" title="HashMap 底层源码分析"></a>HashMap 底层源码分析</h2><p><img src="/./../images/image-20230328105913027.png" alt="image-20230328105913027"></p>
+<p><img src="/./../images/image-20230328111332743.png" alt="image-20230328111332743"></p>
+<p>可以去看HashSet(底层就是HashMap)中的详细分析</p>
+<hr>
+<h2 id="HashTable-底层源码刨析"><a href="#HashTable-底层源码刨析" class="headerlink" title="HashTable 底层源码刨析"></a>HashTable 底层源码刨析</h2><blockquote alt="danger">
+    <p>
+        1. HashTable <font title="yellow">不允许</font>K-V 的值为 null<br/>
+        2. HashMap <font title="yellow">允许</font>K-V 为 null,但是只允许K=null的键值对只有1个 
+    </p>
+</blockquote>
+
+<ol>
+<li><p>底层有数组,Hashtable$Entry[ ],初始化为11</p>
+<p> <img src="/./../images/image-20230328122206846.png" alt="image-20230328122206846"></p>
+</li>
+<li><p>临界值 threshold 8 &#x3D; 11 * 0.75</p>
+</li>
+<li><p>扩容: 有特殊的扩容机制</p>
+</li>
+<li><p>执行 方法 addEntry(hash,key,value,index);</p>
+</li>
+<li><p>rehash() 方法</p>
+</li>
+</ol>
+<p><img src="/./../images/Hashtable%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6.png" alt="Hashtable底层机制"></p>
+<hr>
+<h2 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h2><p><img src="/./../images/image-20230328174223666.png" alt="image-20230328174223666"></p>
+<ol>
+<li>可以通过 K-V 存放数据,Key 和 Value 不能为空</li>
+<li>如果有相同的 Key , 也是替换的</li>
+</ol>
+<h2 id="如何选择集合"><a href="#如何选择集合" class="headerlink" title="如何选择集合"></a>如何选择集合</h2><p><img src="/./../images/image-20230328175714954.png" alt="image-20230328175714954"></p>
+<h2 id="TreeSet-与HashSet的最大区别–可以排序"><a href="#TreeSet-与HashSet的最大区别–可以排序" class="headerlink" title="TreeSet (与HashSet的最大区别–可以排序)"></a>TreeSet (与HashSet的最大区别–可以排序)</h2><ol>
+<li>当我们使用无参构造器创建 TreeSet 时,仍然是无序的</li>
+<li>希望按照字符串大小来排序,可以使用有参构造器传入一个比较器(匿名内部类),并指定排序规则</li>
+</ol>
+<p> <img src="/./../images/TreeSet%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6%E5%88%A8%E6%9E%90.png" alt="TreeSet底层机制刨析"></p>
+<p><img src="/./../images/image-20230331083100366.png" alt="image-20230331083100366"></p>
+<p><span alt="modern">注意这句:</span>这会把传进来的对象尝试转换成Comparable 接口对象,如果传入的对象没有实现 Comparable 接口的方法,那么会抛出异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 底层动态绑定,实现排序的关键代码</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">Entry&lt;K,V&gt; parent;</span><br><span class="line"><span class="comment">// split comparator and comparable paths</span></span><br><span class="line">Comparator&lt;? <span class="built_in">super</span> K&gt; cpr = comparator;</span><br><span class="line"><span class="keyword">if</span> (cpr != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        parent = t;</span><br><span class="line">        <span class="comment">//动态绑定我们定义的匿名内部类(对象)compare</span></span><br><span class="line">        cmp = cpr.compare(key, t.key);</span><br><span class="line">        <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">            t = t.left;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</span><br><span class="line">            t = t.right;</span><br><span class="line">        <span class="keyword">else</span><span class="comment">//如果相等,返回0,这个key就没有加入进去</span></span><br><span class="line">            <span class="keyword">return</span> t.setValue(value);</span><br><span class="line">    &#125; <span class="keyword">while</span> (t != <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p><span alt="modern">思考:</span>为什么TreeSet能够实现排序???</p>
+<p>因为传递了一个 Comparable 接口,使用这个接口能够自定义排序方式,TreeSet 提供了一系列的有参构造方法供自定义</p>
+<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2><p>…</p>
+<h2 id="Collections-工具类"><a href="#Collections-工具类" class="headerlink" title="Collections 工具类"></a>Collections 工具类</h2><p> <img src="/./../images/image-20230330110135229.png" alt="image-20230330110135229"></p>
+<p><img src="/./../images/image-20230330110656649.png" alt="image-20230330110656649"></p>
+<hr>
+<h2 id="本章作业"><a href="#本章作业" class="headerlink" title="本章作业"></a>本章作业</h2><p><img src="/./../images/image-20230330111359117.png" alt="image-20230330111359117"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HomeWork_1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ArrayList</span> <span class="variable">arrayList</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">        arrayList.add(<span class="keyword">new</span> <span class="title class_">News</span>(<span class="string">&quot;新冠病例超千万,数百万印度教信徒赴恒河\&quot;圣浴\&quot;引人担忧&quot;</span>));</span><br><span class="line">        arrayList.add(<span class="keyword">new</span> <span class="title class_">News</span>(<span class="string">&quot;男子想起两个月前吊的鱼还在网兜里,捞起一看赶紧放生&quot;</span>));</span><br><span class="line">        <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> arrayList.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> size - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="type">News</span> <span class="variable">news</span> <span class="operator">=</span> (News) arrayList.get(i);</span><br><span class="line">            System.out.println(processTitle(news.getTitle()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">processTitle</span><span class="params">(String title)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (title == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (title.length() &gt; <span class="number">15</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> title.substring(<span class="number">0</span>, <span class="number">15</span>) + <span class="string">&quot;...&quot;</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> title;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">News</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">News</span><span class="params">(String title)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getTitle</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTitle</span><span class="params">(String title)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getContent</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setContent</span><span class="params">(String content)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.content = content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;News&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;title=&#x27;&quot;</span> + title + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../images/image-20230330113539389.png" alt="image-20230330113539389"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings(&quot;all&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HomeWork_2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">HashMap</span> <span class="variable">hashMap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        hashMap.put(<span class="string">&quot;jack&quot;</span>, <span class="number">650</span>);</span><br><span class="line">        hashMap.put(<span class="string">&quot;tom&quot;</span>, <span class="number">1200</span>);</span><br><span class="line">        hashMap.put(<span class="string">&quot;smith&quot;</span>, <span class="number">2900</span>);</span><br><span class="line">        <span class="comment">//修改jack的工资</span></span><br><span class="line">        hashMap.put(<span class="string">&quot;jack&quot;</span>, <span class="number">2600</span>);</span><br><span class="line">        <span class="comment">//遍历集合,使用entrySet</span></span><br><span class="line">        <span class="type">Set</span> <span class="variable">set</span> <span class="operator">=</span> hashMap.entrySet();</span><br><span class="line">        <span class="type">Iterator</span> <span class="variable">iterator</span> <span class="operator">=</span> set.iterator();</span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">            Map.<span class="type">Entry</span> <span class="variable">next</span> <span class="operator">=</span> (Map.Entry) iterator.next();</span><br><span class="line">            System.out.println((<span class="type">int</span>)next.getValue()) ;<span class="comment">//在这看看工资</span></span><br><span class="line">            hashMap.put((String) next.getKey(), (Integer) next.getValue() + <span class="number">100</span>);<span class="comment">//每个人加薪100</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//输出集合中的元素</span></span><br><span class="line">        System.out.println(hashMap);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../images/image-20230330121339768.png" alt="image-20230330121339768"></p>
+<p>HashSet: hashCode() +equals(),底层先通过存入对象,进行运算得到一个hash值,通过hash值得到对应的索引,如果发现table索引所在位置,没有数据,就直接存放,如果有数据,就进行equals比较[遍历比较],如果比较后,不相同,就加入,否则就不加入</p>
+<p>TreeSet:如果传入了一个Comparator 匿名对象,就是用实现的compare去重,如果返回0,就认为是相同的元素&#x2F;数据,就不添加,如果没有传入一个comparator匿名对象,则以你添加的对象实现的compareabel接口的compare方法</p>
+<hr>
+<p><img src="/./../images/image-20230331083834319.png" alt="image-20230331083834319"></p>
+<hr>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Map%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.</span> <span class="toc-text">Map接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Map%E6%8E%A5%E5%8F%A3%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">Map接口常用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">两种遍历方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap-%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">HashMap 底层源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HashTable-%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%88%A8%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">HashTable 底层源码刨析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Properties"><span class="toc-number">4.</span> <span class="toc-text">Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E9%9B%86%E5%90%88"><span class="toc-number">5.</span> <span class="toc-text">如何选择集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TreeSet-%E4%B8%8EHashSet%E7%9A%84%E6%9C%80%E5%A4%A7%E5%8C%BA%E5%88%AB%E2%80%93%E5%8F%AF%E4%BB%A5%E6%8E%92%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">TreeSet (与HashSet的最大区别–可以排序)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TreeMap"><span class="toc-number">7.</span> <span class="toc-text">TreeMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Collections-%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">8.</span> <span class="toc-text">Collections 工具类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E4%BD%9C%E4%B8%9A"><span class="toc-number">9.</span> <span class="toc-text">本章作业</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&text=HashMap 部分源码探究"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&is_video=false&description=HashMap 部分源码探究"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HashMap 部分源码探究&body=Check out this article: http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&title=HashMap 部分源码探究"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&name=HashMap 部分源码探究&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E9%9B%86%E5%90%88%E4%B8%8B/&t=HashMap 部分源码探究"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023
+    Suchanglii
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

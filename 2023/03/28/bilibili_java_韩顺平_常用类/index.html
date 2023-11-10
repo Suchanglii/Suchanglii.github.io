@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="String的辨析与常用类包装类    包装类与基本数据类型的相互转换 装箱  拆箱  jdk5之前用的是手动装箱与拆箱  123456&#x2F;&#x2F;演示手动装箱int n1&#x3D;100;Integer integer &#x3D; new Integer(n1);Integer integer1 &#x3D; Integer.valueOf(n1);&#x2F;&#x2F;手动拆箱int i &#x3D; Integer.intvalue();   5之后是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中String类型详解">
+<meta property="og:url" content="http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/index.html">
+<meta property="og:site_name" content="Suchanglii&#39;s blog">
+<meta property="og:description" content="String的辨析与常用类包装类    包装类与基本数据类型的相互转换 装箱  拆箱  jdk5之前用的是手动装箱与拆箱  123456&#x2F;&#x2F;演示手动装箱int n1&#x3D;100;Integer integer &#x3D; new Integer(n1);Integer integer1 &#x3D; Integer.valueOf(n1);&#x2F;&#x2F;手动拆箱int i &#x3D; Integer.intvalue();   5之后是">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318150614873.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318151233738.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318151312174.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318151141639.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318154928026.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318155936901.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318161003191.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318161037478.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318172702577.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230318173850851.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319090142542.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319091739980.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319092343041.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319093200821.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319101418537.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319102236677.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319110337011.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319110741037.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319152939972.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319154927130.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319160847386.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319174543190.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319180923378.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319182532148.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319183004344.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319183521291.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319183659253.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230319183935803.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230321163515574.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230321171903999.png">
+<meta property="og:image" content="http://suchanglii.github.io/images/image-20230323153608036.png">
+<meta property="article:published_time" content="2023-03-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-10T13:36:56.767Z">
+<meta property="article:author" content="Suchanglii">
+<meta property="article:tag" content="java基础">
+<meta property="article:tag" content="String">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://suchanglii.github.io/images/image-20230318150614873.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Java中String类型详解</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%8F%8D%E5%B0%84/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%BC%82%E5%B8%B8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&text=Java中String类型详解"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&is_video=false&description=Java中String类型详解"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java中String类型详解&body=Check out this article: http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&name=Java中String类型详解&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&t=Java中String类型详解"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#String%E7%9A%84%E8%BE%A8%E6%9E%90%E4%B8%8E%E5%B8%B8%E7%94%A8%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">String的辨析与常用类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">包装类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E4%B8%8E%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.1.</span> <span class="toc-text">包装类与基本数据类型的相互转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%E4%B8%8EString%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.2.</span> <span class="toc-text">包装类型与String类型的相互转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%BD%E5%A5%BD%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B%E2%80%93String%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">好好了解一下–String类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#String-%E7%B1%BB%E7%9A%84%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB"><span class="toc-number">1.2.1.</span> <span class="toc-text">String 类的继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.2.</span> <span class="toc-text">String创建对象的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String-%E7%B1%BB%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">String 类的常见方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StringBuffer%E7%B1%BB"><span class="toc-number">1.2.4.</span> <span class="toc-text">StringBuffer类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#String-VS-StringBuffer"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">String VS StringBuffer</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StringBuilder"><span class="toc-number">1.2.5.</span> <span class="toc-text">StringBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StringBuffer%E4%B8%8EStringBuilder%E6%AF%94%E8%BE%83"><span class="toc-number">1.2.6.</span> <span class="toc-text">StringBuffer与StringBuilder比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E8%BF%90%E7%AE%97%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB%E2%80%94Math%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">数学运算相关的类—Math类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E4%BA%8E%E7%AE%A1%E7%90%86%E6%88%96%E6%93%8D%E4%BD%9C%E6%95%B0%E7%BB%84%E7%9A%84%E7%B1%BB%E2%80%94Arrays%E7%B1%BB"><span class="toc-number">1.4.</span> <span class="toc-text">用于管理或操作数组的类—Arrays类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#System%E7%B1%BB"><span class="toc-number">1.5.</span> <span class="toc-text">System类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Date%E7%B1%BB-%E7%AC%AC%E4%B8%80%E4%BB%A3%E6%97%A5%E6%9C%9F%E7%B1%BB"><span class="toc-number">1.6.</span> <span class="toc-text">Date类(第一代日期类)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Calendar%E7%B1%BB-%E7%AC%AC%E4%BA%8C%E4%BB%A3%E6%97%A5%E6%9C%9F%E7%B1%BB"><span class="toc-number">1.7.</span> <span class="toc-text">Calendar类(第二代日期类)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%BB%A3%E6%97%A5%E6%9C%9F%E7%B1%BB"><span class="toc-number">1.8.</span> <span class="toc-text">第三代日期类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text"></span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Java中String类型详解
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Suchanglii</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-27T16:00:00.000Z" class="dt-published" itemprop="datePublished">2023-03-28</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/String/" rel="tag">String</a>, <a class="p-category" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="String的辨析与常用类"><a href="#String的辨析与常用类" class="headerlink" title="String的辨析与常用类"></a>String的辨析与常用类</h1><h2 id="包装类"><a href="#包装类" class="headerlink" title="包装类"></a>包装类</h2><p><img src="/./../images/image-20230318150614873.png" alt="image-20230318150614873"></p>
+<p><img src="/./../images/image-20230318151233738.png" alt="image-20230318151233738"></p>
+<p><img src="/./../images/image-20230318151312174.png" alt="image-20230318151312174"></p>
+<p><img src="/./../images/image-20230318151141639.png" alt="image-20230318151141639"></p>
+<h3 id="包装类与基本数据类型的相互转换"><a href="#包装类与基本数据类型的相互转换" class="headerlink" title="包装类与基本数据类型的相互转换"></a>包装类与基本数据类型的相互转换</h3><ul>
+<li><p>装箱</p>
+</li>
+<li><p>拆箱</p>
+<ol>
+<li><p>jdk5之前用的是手动装箱与拆箱</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//演示手动装箱</span></span><br><span class="line"><span class="type">int</span> n1=<span class="number">100</span>;</span><br><span class="line"><span class="type">Integer</span> <span class="variable">integer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(n1);</span><br><span class="line"><span class="type">Integer</span> <span class="variable">integer1</span> <span class="operator">=</span> Integer.valueOf(n1);</span><br><span class="line"><span class="comment">//手动拆箱</span></span><br><span class="line"><span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> Integer.intvalue();</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>5之后是自动的了     <span alt="shake">面试</span></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> n2=<span class="number">200</span>;</span><br><span class="line"><span class="type">Integer</span> <span class="variable">integer2</span> <span class="operator">=</span> n2;<span class="comment">//底层仍然使用的是Integer.valueOf(n2)</span></span><br><span class="line"><span class="comment">//拆箱</span></span><br><span class="line"><span class="type">int</span> <span class="variable">n3</span> <span class="operator">=</span> integer2;<span class="comment">//底层仍然他用的是intValue();</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+<blockquote alt="warn">
+    <p>
+           面试题
+    </p>
+</blockquote>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">obj1</span> <span class="operator">=</span> ture? <span class="keyword">new</span> <span class="title class_">Integer</span>(<span class="number">1</span>):<span class="keyword">new</span> <span class="title class_">Double</span>(<span class="number">2.0</span>);<span class="comment">// 1.0</span></span><br></pre></td></tr></table></figure>
+
+<p><span alt="underline">输出的是1.0,而不是1,这个三元运算符视作一个整体,会提升精度</span></p>
+<h3 id="包装类型与String类型的相互转换"><a href="#包装类型与String类型的相互转换" class="headerlink" title="包装类型与String类型的相互转换"></a>包装类型与String类型的相互转换</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line"><span class="comment">//方式1</span></span><br><span class="line"><span class="type">String</span> <span class="variable">str1</span> <span class="operator">=</span> i + <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="comment">//2</span></span><br><span class="line"><span class="type">String</span> <span class="variable">str2</span> <span class="operator">=</span> i.toString();</span><br><span class="line"><span class="comment">//3</span></span><br><span class="line"><span class="type">String</span> <span class="variable">str3</span> <span class="operator">=</span> String.valueOf(i);<span class="comment">//valueOf(Object obj)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str4</span> <span class="operator">=</span> <span class="string">&quot;12345&quot;</span>;</span><br><span class="line"><span class="type">Integer</span> <span class="variable">i2</span> <span class="operator">=</span> Integer.parseInt(str4);</span><br><span class="line"><span class="type">Integer</span> <span class="variable">i3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(str4);</span><br></pre></td></tr></table></figure>
+
+<p><span alt="shake">面试题</span></p>
+<p><img src="/./../images/image-20230318154928026.png" alt="image-20230318154928026"></p>
+<p>底层源码:</p>
+<p><img src="/./../images/image-20230318155936901.png" alt="image-20230318155936901"></p>
+<p><span alt="modern">注意</span><br>如果i在IntegerCache.low(-128)~IntegerCache.high(127),直接从数组返回,不在这个范围内,就创建新的对象</p>
+<p>Integer这个数组在类加载的时候已经创建好了.</p>
+<hr>
+<p><span alt="shake">面试题</span></p>
+<p><img src="/./../images/image-20230318161003191.png" alt="image-20230318161003191"></p>
+<p><img src="/./../images/image-20230318161037478.png" alt="image-20230318161037478"></p>
+<h2 id="好好了解一下–String类"><a href="#好好了解一下–String类" class="headerlink" title="好好了解一下–String类"></a>好好了解一下–String类</h2><h3 id="String-类的继承关系"><a href="#String-类的继承关系" class="headerlink" title="String 类的继承关系"></a>String 类的继承关系</h3><p><img src="/./../images/image-20230318172702577.png" alt="image-20230318172702577"></p>
+<p>串行化—&gt; 可以在网络上传输</p>
+<hr>
+<p><span alt="modern">特点:</span></p>
+<p><img src="/./../images/image-20230318173850851.png" alt="image-20230318173850851"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">char</span>[] value = &#123;<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>&#125;</span><br><span class="line"><span class="type">char</span>[] v2 = &#123;<span class="string">&#x27;t&#x27;</span>,<span class="string">&#x27;o&#x27;</span>,<span class="string">&#x27;m&#x27;</span>&#125;;</span><br><span class="line">value[<span class="number">0</span>] = <span class="string">&#x27;H&#x27;</span>;<span class="comment">//允许的</span></span><br><span class="line"><span class="comment">//value = v2;//不可以修改value的地址</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="String创建对象的区别"><a href="#String创建对象的区别" class="headerlink" title="String创建对象的区别"></a>String创建对象的区别</h3><p>不同创建方式所对应的内存布局图</p>
+<ol>
+<li><pre><code class="java"> String s = &quot;hsp&quot;;
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    先从常量池查看是否有&quot;scl&quot;数据空间,如果有,直接指向;如果没有则重新创建,然后指向.s最终指向的是常量池的空间地址</span><br><span class="line"></span><br><span class="line">    ![image-20230318191647558](./../images/image-20230318191647558.png)</span><br><span class="line"></span><br><span class="line">2. ```java</span><br><span class="line">    String s2 = new String(&quot;hsp&quot;);</span><br></pre></td></tr></table></figure>
+
+ 先在堆中创建空间,里面维护了value属性,指向常量池的sscl空间,如果常量池没有&quot;scl&quot;,重新创建,如果有,直接通过value指向,最终指向的是队中的空间地址
+
+ ![image-20230318191830608](./../images/image-20230318191830608.png)
+
+ 
+
+ ---
+
+ 练习题:
+
+ 1. ![image-20230318194614953-1679139976650-1](./../images/image-20230318194614953-1679139976650-1.png)
+
+ 2. ![image-20230318195050151](./../images/image-20230318195050151.png)
+ 
+ 3. ![image-20230318195506082](./../images/image-20230318195506082.png)
+ 
+ 4. ![image-20230318195735765](./../images/image-20230318195735765.png)
+ 
+     &lt;span alt=&quot;modern&quot;&gt;着重理解&lt;/span&gt;
+ 
+     字符串一创建就会在常量池里面有对应的对象(不知道说的准确不准确,大概就这个意思),&lt;span alt=&quot;wavy&quot;&gt;字符串在==底层==实际上是以char[ ] value的形式存在的,而且这个是final的(String 类也是final的)&lt;/span&gt;,所以给一个字符串赋值的时候,实际上是如果有这个字符串,引用对象就指向它;没有这个字符串就在常量池里面创建一个字符串对象,然后再指向它.
+ 
+ 5. ![image-20230318200657027](./../images/image-20230318200657027.png)
+ 
+ 6. ![image-20230318201602121](./../images/image-20230318201602121.png)
+ 
+     ![image-20230318201646604](./../images/image-20230318201646604.png)
+ 
+ 7. ![image-20230318202209425](./../images/image-20230318202209425.png)
+ 
+ 8. &lt;font title=&quot;yellow&quot;&gt;很吊的题&lt;/font&gt;
+ 
+     ![image-20230318203205650](./../images/image-20230318203205650.png)
+ 
+ ---
+</code></pre>
+</li>
+</ol>
+<h3 id="String-类的常见方法"><a href="#String-类的常见方法" class="headerlink" title="String 类的常见方法"></a>String 类的常见方法</h3><p><img src="/./../images/image-20230319090142542.png" alt="image-20230319090142542"></p>
+<p><img src="/./../images/image-20230319091739980.png" alt="image-20230319091739980"></p>
+<h3 id="StringBuffer类"><a href="#StringBuffer类" class="headerlink" title="StringBuffer类"></a>StringBuffer类</h3><p><img src="/./../images/image-20230319092343041.png" alt="image-20230319092343041"></p>
+<p>代表可变字符序列,</p>
+<ul>
+<li>StringBuffer的&#x3D;&#x3D;父类有属性char[] value;并不是final&#x3D;&#x3D;</li>
+<li>(不是final的)value数字存放字符 —&gt; 存在堆中</li>
+<li>StringBuffer是final的</li>
+<li>StringBuffer字符串内容在变化的时候不用不用每次都更换地址(不用每次创建对象),char[] value要比存的字符串长一点,要追加的话直接跟上就行了,太长的时候才会创建新的对象,重新指向新的char[] &lt;看下面图&gt;</li>
+</ul>
+<h4 id="String-VS-StringBuffer"><a href="#String-VS-StringBuffer" class="headerlink" title="String VS StringBuffer"></a>String VS StringBuffer</h4><p><img src="/./../images/image-20230319093200821.png" alt="image-20230319093200821"></p>
+<hr>
+<p><img src="/./../images/image-20230319101418537.png" alt="image-20230319101418537"></p>
+<p><img src="/./../images/image-20230319102236677.png" alt="image-20230319102236677"></p>
+<h3 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a>StringBuilder</h3><p>继承关系图:</p>
+<ol>
+<li>一个可变的字符序列.此类提供一个与StringBuffer兼容API,但不保证同步(StringBuider不是线程安全的).此类被实际用作StringBuffer的一个建议替换,&#x3D;&#x3D;用在字符串缓冲区被单个线程使用的时候&#x3D;&#x3D;.如果可能,建议优先采用该类,因为在大多数实现中,它比StringBuffer要快</li>
+<li>在StringBuilder上的主要操作是append与insert方法,可重载这些方法,已接受任意类型的数据</li>
+</ol>
+<p>Stringbuilder与StringBuffer均是代表可变的字符序列 ,方法是一样的</p>
+<p><img src="/./../images/image-20230319110337011.png" alt="image-20230319110337011"></p>
+<ol>
+<li><p>StringBuilder 是final类,不能被继承</p>
+</li>
+<li><p>Stringbuuilder 对象字符序列仍然是存放在其父类中的.</p>
+<p> AbstractStringBuilder的 char[ ] value;</p>
+<p> <img src="/./../images/image-20230319110741037.png" alt="image-20230319110741037"></p>
+<p> <font>因此,字符序列是存在堆中的</font></p>
+</li>
+<li><p>StringBuilder 的方法,没有做互斥处理,即没有synchronized 关键字.因此推荐在&#x3D;&#x3D;单线程的情况下,使用Stringbuilder&#x3D;&#x3D;</p>
+</li>
+</ol>
+<h3 id="StringBuffer与StringBuilder比较"><a href="#StringBuffer与StringBuilder比较" class="headerlink" title="StringBuffer与StringBuilder比较"></a>StringBuffer与StringBuilder比较</h3><ol>
+<li><p>String : 不可变字符序列,效率低,但是复用率高</p>
+</li>
+<li><p>StringBuffer : 可变字符序列,效率较高(增删).线程安全</p>
+</li>
+<li><p>StringBuilder : 可变字符序列,效率最高,线程不安全</p>
+</li>
+<li><p>String 使用注意说明:</p>
+<p> String s&#x3D;”a”&#x2F;&#x2F;创建了一个字符集</p>
+<p> s +&#x3D; “b”&#x2F;&#x2F;实际上原来的”a”字符串对象已经丢弃,现在又船身了一个字符</p>
+<p> 串s + “b” (也就是”ab”).如果多次执行这些改变串内容的操作,会导致大量的副本字符串对象残留在内存中,降低效率.如果这样的操作放到循环中,会极大影响程序的性能 &#x3D;&gt; <font>结论: 如果我们对String 做大量修改,不要使用String,应该使用StringBuffer,如果是单线程的话,更推荐使用StringBuilder</font></p>
+</li>
+</ol>
+<p>&#x3D;&#x3D;效率&#x3D;&#x3D; : StringBuilder &gt; StringBuffer &gt; String</p>
+<p><img src="/./../images/image-20230319152939972.png" alt="image-20230319152939972"></p>
+<h2 id="数学运算相关的类—Math类"><a href="#数学运算相关的类—Math类" class="headerlink" title="数学运算相关的类—Math类"></a>数学运算相关的类—Math类</h2><p><img src="/./../images/image-20230319154927130.png" alt="image-20230319154927130"></p>
+<h2 id="用于管理或操作数组的类—Arrays类"><a href="#用于管理或操作数组的类—Arrays类" class="headerlink" title="用于管理或操作数组的类—Arrays类"></a>用于管理或操作数组的类—Arrays类</h2><ol>
+<li><p>toString 返回数组的字符串形式</p>
+</li>
+<li><p>sort()  排序</p>
+<ol>
+<li><p>可以直接使用冒泡排序,也可以直接使用Arrays提供的sort方法排序</p>
+</li>
+<li><p>因为数组是引用类型,所以通过sort()排序后,会直接影响到实参 </p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Integer arr[] = &#123;<span class="number">1</span>,-<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">8</span>&#125;;</span><br><span class="line">Arrays.sort(arr);</span><br><span class="line">sout(Arrays.toString(arr));<span class="comment">//实参已经改变了</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sort重载的,也可以通过传入一个接口 Comoarator 实现定制排序</p>
+<p> <span alt="modern">注意一下,这里有点东西的</span></p>
+</li>
+</ol>
+<p> <img src="/./../images/image-20230319160847386.png" alt="image-20230319160847386"></p>
+</li>
+<li><p>binarySearch() -&gt; 通过二分搜索法查找,要求排好序</p>
+<ol>
+<li><p>要求该数组是有序的.</p>
+</li>
+<li><p>如果数组中找不到,就返回  -1</p>
+<p> &#x3D;&#x3D;这个地方看看源码:&#x3D;&#x3D;</p>
+<p> 不存在返回的是 : return -(low+1); &#x2F;&#x2F;low : 实际上应该存在的位置</p>
+</li>
+</ol>
+</li>
+<li><p>copyOf() -&gt; 数组元素的复制</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Integer[] newArr = Arrays.copyOf(arr,arr.length);<span class="comment">//将arr.length 个元素拷贝到新数组中</span></span><br></pre></td></tr></table></figure>
+
+<p> 如果拷贝的长度 &gt; arr.length 就在新数组后面增加null</p>
+<p> 如果拷贝的长度 &lt; 0,就抛出异常NegetiveArraySizeException</p>
+<p> 该方法的底层使用的是 System.arraycopy( );</p>
+</li>
+<li><p>ill() -&gt; 数组元素的填充</p>
+<p> 替换数组中所有的元素</p>
+</li>
+</ol>
+<p><img src="/./../images/image-20230319174543190.png" alt="image-20230319174543190"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> ArrayClass;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Comparator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArraysClass_1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Book[] books = <span class="keyword">new</span> <span class="title class_">Book</span>[<span class="number">4</span>];</span><br><span class="line">        books[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">Book</span>(<span class="string">&quot;三国演艺&quot;</span>, <span class="number">100</span>);</span><br><span class="line">        books[<span class="number">1</span>] = <span class="keyword">new</span> <span class="title class_">Book</span>(<span class="string">&quot;西游记&quot;</span>, <span class="number">200</span>);</span><br><span class="line">        books[<span class="number">2</span>] = <span class="keyword">new</span> <span class="title class_">Book</span>(<span class="string">&quot;红楼石头记&quot;</span>, <span class="number">300</span>);</span><br><span class="line">        books[<span class="number">3</span>] = <span class="keyword">new</span> <span class="title class_">Book</span>(<span class="string">&quot;水浒&quot;</span>, <span class="number">400</span>);</span><br><span class="line">        <span class="comment">//这四本书按照价格 从大到小 的顺序排序</span></span><br><span class="line">        <span class="comment">//Arrays.sort(books, new Comparator&lt;Book&gt;() &#123;</span></span><br><span class="line">        <span class="comment">//    @Override</span></span><br><span class="line">        <span class="comment">//    public int compare(Book o1, Book o2) &#123;</span></span><br><span class="line">        <span class="comment">//        double priceVal = o1.getPrice() - o2.getPrice();</span></span><br><span class="line">        <span class="comment">//        if (priceVal&gt;0)&#123;</span></span><br><span class="line">        <span class="comment">//            return -1;</span></span><br><span class="line">        <span class="comment">//        &#125;else if(priceVal&lt;0)&#123;</span></span><br><span class="line">        <span class="comment">//            return 1;</span></span><br><span class="line">        <span class="comment">//        &#125;else &#123;</span></span><br><span class="line">        <span class="comment">//            return 0;</span></span><br><span class="line">        <span class="comment">//        &#125;</span></span><br><span class="line">        <span class="comment">//    &#125;</span></span><br><span class="line">        <span class="comment">//&#125;);</span></span><br><span class="line">        <span class="comment">//这四本书按照价格 从小到大 的顺序排序</span></span><br><span class="line">        <span class="comment">//Arrays.sort(books, new Comparator&lt;Book&gt;() &#123;</span></span><br><span class="line">        <span class="comment">//    @Override</span></span><br><span class="line">        <span class="comment">//    public int compare(Book o1, Book o2) &#123;</span></span><br><span class="line">        <span class="comment">//        double priceVal = o1.getPrice() - o2.getPrice();</span></span><br><span class="line">        <span class="comment">//        if (priceVal&gt;0)&#123;</span></span><br><span class="line">        <span class="comment">//            return 1;</span></span><br><span class="line">        <span class="comment">//        &#125;else if(priceVal&lt;0)&#123;</span></span><br><span class="line">        <span class="comment">//            return -1;</span></span><br><span class="line">        <span class="comment">//        &#125;else &#123;</span></span><br><span class="line">        <span class="comment">//            return 0;</span></span><br><span class="line">        <span class="comment">//        &#125;</span></span><br><span class="line">        <span class="comment">//    &#125;</span></span><br><span class="line">        <span class="comment">//&#125;);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//按照名字从短到长的顺序</span></span><br><span class="line">        Arrays.sort(books, <span class="keyword">new</span> <span class="title class_">Comparator</span>&lt;Book&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Book o1, Book o2)</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> o1.getName().length() - o2.getName().length();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        System.out.println(Arrays.toString(books));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Book</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> price;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Book</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Book</span><span class="params">(String name, <span class="type">double</span> price)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.price = price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getPrice</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPrice</span><span class="params">(<span class="type">double</span> price)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.price = price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Book&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, price=&quot;</span> + price +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="System类"><a href="#System类" class="headerlink" title="System类"></a>System类</h2><p><img src="/./../images/image-20230319180923378.png" alt="image-20230319180923378"></p>
+<h2 id="Date类-第一代日期类"><a href="#Date类-第一代日期类" class="headerlink" title="Date类(第一代日期类)"></a>Date类(第一代日期类)</h2><p><img src="/./../images/image-20230319182532148.png" alt="image-20230319182532148"></p>
+<h2 id="Calendar类-第二代日期类"><a href="#Calendar类-第二代日期类" class="headerlink" title="Calendar类(第二代日期类)"></a>Calendar类(第二代日期类)</h2><p><img src="/./../images/image-20230319183004344.png" alt="image-20230319183004344"></p>
+<p>得通过getInstance() 获取实例(构造方法是protected)</p>
+<p><img src="/./../images/image-20230319183521291.png" alt="image-20230319183521291"></p>
+<h2 id="第三代日期类"><a href="#第三代日期类" class="headerlink" title="第三代日期类"></a>第三代日期类</h2><p><img src="/./../images/image-20230319183659253.png" alt="image-20230319183659253"></p>
+<hr>
+<p>练习</p>
+<p><img src="/./../images/image-20230319183935803.png" alt="image-20230319183935803"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Exercise;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 字符串反转</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Exercise_1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;abcdef&quot;</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;转换前: &quot;</span> + str);</span><br><span class="line">        <span class="comment">//System.out.println(&quot;转换后: &quot; + reverse(str, 1, 4));</span></span><br><span class="line">        <span class="comment">//我们既然有类型检查,验证一下</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//str=reverse(str, 3, 5);</span></span><br><span class="line">            str=reverse(str, <span class="number">5</span>, <span class="number">5</span>);</span><br><span class="line">            <span class="comment">//转换前: abcdef</span></span><br><span class="line">            <span class="comment">//java.lang.RuntimeException: 参数不正确</span></span><br><span class="line">            <span class="comment">// at Exercise.Exercise_1.reverse(Exercise_1.java:29)</span></span><br><span class="line">            <span class="comment">// at Exercise.Exercise_1.main(Exercise_1.java:14)</span></span><br><span class="line">            <span class="comment">//参数不正确</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            System.out.println(e.getMessage());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;转换后: &quot;</span> + str);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">reverse</span><span class="params">(String str, <span class="type">int</span> start, <span class="type">int</span> end)</span> &#123;</span><br><span class="line">        <span class="comment">//考虑到参数正确的问题,添加适当的条件,保证其参数没有问题</span></span><br><span class="line">        <span class="comment">//1. 考虑不正确的情况可能不是太好找,但是正确的情况有限,我们把正确的情况取反就行了</span></span><br><span class="line">        <span class="comment">//这里也体现了一种思维</span></span><br><span class="line">        <span class="comment">//str != null &amp;&amp; start &lt; end &amp;&amp; start &gt;= 0 &amp;&amp; end &lt; str.length()  &lt;----这是正确的情况,我们把他取反就是不正确的情况了</span></span><br><span class="line">        <span class="keyword">if</span> (!(str != <span class="literal">null</span> &amp;&amp; start &lt; end &amp;&amp; start &gt;= <span class="number">0</span> &amp;&amp; end &lt; str.length())) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;参数不正确&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">char</span>[] chars = str.toCharArray();<span class="comment">//转换成数组</span></span><br><span class="line">        <span class="type">char</span> <span class="variable">temp</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> start, j = end; i &lt; j; i++, j--) &#123;</span><br><span class="line">            temp = chars[j];</span><br><span class="line">            chars[j] = chars[i];</span><br><span class="line">            chars[i] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(chars);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../images/image-20230321163515574.png" alt="image-20230321163515574"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> String_Exercise;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Exercise_2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 测试,模拟输入</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> <span class="string">&quot;scl&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">email</span> <span class="operator">=</span> <span class="string">&quot;1234@qq.com&quot;</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            userRegister(username, password, email);</span><br><span class="line">            System.out.println(<span class="string">&quot;注册成功&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">userRegister</span><span class="params">(String name, String password, String email)</span> &#123;</span><br><span class="line">        <span class="comment">//判断name</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">usernameLength</span> <span class="operator">=</span> name.length();</span><br><span class="line">        <span class="keyword">if</span> (!(usernameLength &gt;= <span class="number">2</span> &amp;&amp; usernameLength &lt;= <span class="number">4</span>)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;用户名不符合要求&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//判断密码</span></span><br><span class="line">        <span class="keyword">if</span> (!(password.length() == <span class="number">6</span> &amp;&amp; isDigtal(password))) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;密码不符合要求&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//判断邮箱</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> email.indexOf(<span class="string">&quot;@&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> email.indexOf(<span class="string">&quot;.&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (!(i &gt; <span class="number">0</span> &amp;&amp; j &gt; i)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;邮箱有误&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//此方法用来判断密码中是否是纯数字的</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isDigtal</span><span class="params">(String password)</span> &#123;</span><br><span class="line">        <span class="type">char</span>[] chars = password.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; password.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (chars[i]&lt;<span class="string">&#x27;0&#x27;</span>||chars[i]&gt;<span class="string">&#x27;9&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../images/image-20230321171903999.png" alt="image-20230321171903999"></p>
+<hr>
+<p><span alt="shake">重点</span></p>
+<h1 id=""><a href="#" class="headerlink" title=""></a><img src="/./../images/image-20230323153608036.png" alt="image-20230323153608036"></h1>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#String%E7%9A%84%E8%BE%A8%E6%9E%90%E4%B8%8E%E5%B8%B8%E7%94%A8%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">String的辨析与常用类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">包装类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E4%B8%8E%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.1.</span> <span class="toc-text">包装类与基本数据类型的相互转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%E4%B8%8EString%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.2.</span> <span class="toc-text">包装类型与String类型的相互转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%BD%E5%A5%BD%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B%E2%80%93String%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">好好了解一下–String类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#String-%E7%B1%BB%E7%9A%84%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB"><span class="toc-number">1.2.1.</span> <span class="toc-text">String 类的继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.2.</span> <span class="toc-text">String创建对象的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String-%E7%B1%BB%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">String 类的常见方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StringBuffer%E7%B1%BB"><span class="toc-number">1.2.4.</span> <span class="toc-text">StringBuffer类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#String-VS-StringBuffer"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">String VS StringBuffer</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StringBuilder"><span class="toc-number">1.2.5.</span> <span class="toc-text">StringBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StringBuffer%E4%B8%8EStringBuilder%E6%AF%94%E8%BE%83"><span class="toc-number">1.2.6.</span> <span class="toc-text">StringBuffer与StringBuilder比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E8%BF%90%E7%AE%97%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB%E2%80%94Math%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">数学运算相关的类—Math类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E4%BA%8E%E7%AE%A1%E7%90%86%E6%88%96%E6%93%8D%E4%BD%9C%E6%95%B0%E7%BB%84%E7%9A%84%E7%B1%BB%E2%80%94Arrays%E7%B1%BB"><span class="toc-number">1.4.</span> <span class="toc-text">用于管理或操作数组的类—Arrays类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#System%E7%B1%BB"><span class="toc-number">1.5.</span> <span class="toc-text">System类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Date%E7%B1%BB-%E7%AC%AC%E4%B8%80%E4%BB%A3%E6%97%A5%E6%9C%9F%E7%B1%BB"><span class="toc-number">1.6.</span> <span class="toc-text">Date类(第一代日期类)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Calendar%E7%B1%BB-%E7%AC%AC%E4%BA%8C%E4%BB%A3%E6%97%A5%E6%9C%9F%E7%B1%BB"><span class="toc-number">1.7.</span> <span class="toc-text">Calendar类(第二代日期类)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%BB%A3%E6%97%A5%E6%9C%9F%E7%B1%BB"><span class="toc-number">1.8.</span> <span class="toc-text">第三代日期类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text"></span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&text=Java中String类型详解"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&is_video=false&description=Java中String类型详解"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java中String类型详解&body=Check out this article: http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&title=Java中String类型详解"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&name=Java中String类型详解&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://suchanglii.github.io/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/&t=Java中String类型详解"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023
+    Suchanglii
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Suchanglii/Suchanglii.github.io">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
