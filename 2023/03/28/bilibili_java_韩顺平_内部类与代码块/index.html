@@ -87,10 +87,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post" href="/2023/12/07/redis%E4%B8%BB%E4%BB%8E-%E5%93%A8%E5%85%B5-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Previous post" href="/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%B8%B8%E7%94%A8%E7%B1%BB/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="Next post" href="/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%8F%8D%E5%B0%84/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Next post" href="/2023/03/28/bilibili_java_%E9%9F%A9%E9%A1%BA%E5%B9%B3_%E5%BC%82%E5%B8%B8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -187,8 +187,8 @@
 </blockquote>
 <blockquote alt="warn">
 <p>
-    1. 静态方法main能过直接访问本类的静态成员</br>
-    2. 静态方法main不可以访问本类的非静态成员</br>
+    1. 静态方法main能过直接访问本类的静态成员<br>
+    2. 静态方法main不可以访问本类的非静态成员<br>
     3. 静态方法main 要访问本类的非静态成员,需要先创建对象,再调用即可
 </p>
 </blockquote>
@@ -201,7 +201,7 @@
 <h4 id="代码块快速入门"><a href="#代码块快速入门" class="headerlink" title="代码块快速入门"></a>代码块快速入门</h4><p><img src="/./../images/image-20230315194550149.png" alt="image-20230315194550149"></p>
 <blockquote alt="warn">
 <p>
-    1. 当我们在构造器中需要有重复的工作的时候,可以将代码提取到静态代码块中</br>
+    1. 当我们在构造器中需要有重复的工作的时候,可以将代码提取到静态代码块中<br>
     2. 代码块的调用顺序优先于构造器
 </p>
 </blockquote>
@@ -214,7 +214,7 @@
 </blockquote>
 <blockquote alt="warn">
 <p>
-<font title="red">静态代码块</font>随着<span alt="wavy">1. 类的加载而执行,2.并只会执行一次.3.调用静态属性的时候 ,也会被调用</span></br>
+<font title="red">静态代码块</font>随着<span alt="wavy">1. 类的加载而执行,2.并只会执行一次.3.调用静态属性的时候 ,也会被调用</span><br>
 <font alt="red">普通代码块</font>
 <span alt="wavy">1.每创建一个对象,就执行.2.而且只是使用静态属性,普通代码块不会被执行</span>
 </p>
@@ -228,8 +228,8 @@
 </ol>
 <blockquote alt="success">
 <p>
-1. static代码块是类加载时,执行.调用一次  </br>
-2. 普通代码块石创建对象时调用,创建一次,调用一次  </br>
+1. static代码块是类加载时,执行.调用一次  <br>
+2. 普通代码块石创建对象时调用,创建一次,调用一次  <br>
 3. <span alt="emp">类加载的三种情况</span>  
 </p>
 </blockquote>
@@ -348,15 +348,15 @@
 
 <blockquote alt="question">
     <p>
-        需求:想使用IA接口 并创建对象<br/>
-        tiger类只是使用一次,后面再不使用<br/>
+        需求:想使用IA接口 并创建对象<br>
+        tiger类只是使用一次,后面再不使用<br>
     </p>
 </blockquote>
 ==可以使用匿名内部类,简化开发==
 
 <blockquote alt="question">
     <p>
-           tiger的编译类型是什么?------IA<br/>
+           tiger的编译类型是什么?------IA<br>
            tiger的运行类型是什么?------就是匿名内部类--->XXXX的名字:<font>外部类名称$1</font>
     </p>
 </blockquote>
@@ -432,13 +432,13 @@
 <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/26954130">https://www.zhihu.com/question/26954130</a></p>
 <blockquote alt="warn">
     <p>
-        内部类使用的原因<br/>
-        1. 封装性<br/>
-        2. <font>实现多继承</font><br/>
-        3. 用匿名内部类实现回调功能<br/>
-        4. 解决继承及实现接口出现同名方法的问题<br/>
-        5. 可以有效的将有一定关系的类组织在一起，又可以对外界有所隐藏<br/>
-        6. 方便编写事件驱动程序<br/>
+        内部类使用的原因<br>
+        1. 封装性<br>
+        2. <font>实现多继承</font><br>
+        3. 用匿名内部类实现回调功能<br>
+        4. 解决继承及实现接口出现同名方法的问题<br>
+        5. 可以有效的将有一定关系的类组织在一起，又可以对外界有所隐藏<br>
+        6. 方便编写事件驱动程序<br>
         7. 方便编写多线程代码
     </p>
 </blockquote>
